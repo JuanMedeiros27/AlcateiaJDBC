@@ -156,9 +156,9 @@ Métodos: — — —> sql
 		— — — — — — — — — — — — — — — — — — — — —
 		Atributos:
 	            int numColunas —> Um número inteiro que representa o número de colunas que a tabela possui.
-	            String[] nomeColunas —> Um Array de Strings que representa o nome das colunas que a tabela possui. (As suas posições seguem a mesma ordem de como estão dispostos na 					tabela)
-	            String[] nomeTipoColunas —> Um Array de Strings que representa o nome do tipo das colunas que a tabela possui. (As suas posições seguem a mesma ordem de como estão 					dispostos na tabela)
-	            int[] tipoColunas —> Um Array de Int que representa o tipo das colunas que a tabela possui, os valores correspondem ao java.sql.Types. (As suas posições seguem a mesma 				ordem de como estão dispostos na tabela)
+	            String[] nomeColunas —> Um Array de Strings que representa o nome das colunas que a tabela possui. (As suas posições seguem a mesma ordem de como estão dispostos na tabela)
+	            String[] nomeTipoColunas —> Um Array de Strings que representa o nome do tipo das colunas que a tabela possui. (As suas posições seguem a mesma ordem de como estão dispostos na tabela)
+	            int[] tipoColunas —> Um Array de Int que representa o tipo das colunas que a tabela possui, os valores correspondem ao java.sql.Types. (As suas posições seguem a mesma ordem de como estão dispostos na tabela)
 	            Map<String, String> FKs —> Um Map que representa as tabelas e as colunas que são referenciadas pelas Foreign Keys da tabela passada como parâmetro.
 		— — — — — — — — — — — — — — — — — — — — —
 		Exceptions:
