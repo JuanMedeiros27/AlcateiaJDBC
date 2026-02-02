@@ -5,9 +5,9 @@ import java.sql.*;
 
 public class cn {
     
-    public static Connection connect(String provedor, String nomedb, String user, String senha){
+    public static Connection connect(String sistema, String nomedb, String user, String senha){
         try {
-            Connection connection = DriverManager.getConnection(formarURL(provedor, nomedb), user, senha);
+            Connection connection = DriverManager.getConnection(formarURL(sistema, nomedb), user, senha);
             connection.setAutoCommit(false);
             return connection;
         } catch (SQLException ex) {
@@ -34,7 +34,7 @@ public class cn {
             case "mysql":
                 return "jdbc:%s://localhost:33060/%s".formatted(provedor,nomedb);
             default:
-                throw new IllegalArgumentException("Provedor nao suportado." + "\n\nProvedores que a biblioteca possui suporte: postgres, mysql.");
+                throw new IllegalArgumentException("Sistema nao suportado." + "\n\nSistemas que a biblioteca possui suporte: postgres, mysql.");
         }
     }
     
@@ -42,7 +42,7 @@ public class cn {
         if(provedor.equals("postgres") || provedor.equals("mysql")){
             return "jdbc:%s://%s/%s".formatted(provedor, host, nomedb);
         } else {
-            throw new IllegalArgumentException("Provedor nao suportado." + "\n\nProvedores que a biblioteca possui suporte: postgres, mysql.");
+            throw new IllegalArgumentException("Sistema nao suportado." + "\n\nSistemas que a biblioteca possui suporte: postgres, mysql.");
         }
     }
     
