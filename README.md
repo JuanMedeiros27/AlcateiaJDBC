@@ -3,7 +3,7 @@ Uma biblioteca Java com métodos úteis para quem quer desenvolver com JDBC.
 
 Esse é um Trabalho de Conclusão de Curso para o curso de Técnico de Informática para Internet.
 
-Versão: 1.3
+Versão: 1.4
 
 Instalação: 
     Será feita através do JitPack.
