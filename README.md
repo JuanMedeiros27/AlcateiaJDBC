@@ -8,20 +8,20 @@ Versão: 1.0
 Instalação: 
     Será feita através do JitPack.
 
-Método connect:
-        — — — — — — — — — — — — — — — — — — — — —
-	Assinatura:
-            (String sistema, String nomedb, String user, String senha)
-	— — — — — — — — — — — — — — — — — — — — —
-	Parâmetros:
-            String sistema —> Uma String contendo o sistema de gerenciamento que você utiliza.
-            Sistemas Suportados: postgresql e mysql.
-            String nomedb —> Uma String contendo o nome do banco de dados que se deseja conectar.
-            String user/senha —> Uma String contendo o seu nome de usuário e senha do sistema.
-	— — — — — — — — — — — — — — — — — — — — —
-	Exceptions:
-            IllegalArgumentException:
-                Quando o sistema passado como parâmetro não for suportado pela biblioteca.
+	Método connect:
+	    — — — — — — — — — — — — — — — — — — — — —
+		Assinatura:
+	            (String sistema, String nomedb, String user, String senha)
+		— — — — — — — — — — — — — — — — — — — — —
+		Parâmetros:
+	            String sistema —> Uma String contendo o sistema de gerenciamento que você utiliza.
+	            Sistemas Suportados: postgresql e mysql.
+	            String nomedb —> Uma String contendo o nome do banco de dados que se deseja conectar.
+	            String user/senha —> Uma String contendo o seu nome de usuário e senha do sistema.
+		— — — — — — — — — — — — — — — — — — — — —
+		Exceptions:
+	            IllegalArgumentException:
+	                Quando o sistema passado como parâmetro não for suportado pela biblioteca.
 
 
 Métodos: — — —> sql
@@ -145,25 +145,25 @@ Métodos: — — —> sql
                     Quando a conexão for nula ou estiver fechada;
                     Quando o nome de uma ou mais tabelas não existir no banco de dados referenciado;
 
-Objeto TabelaMetaData:
-        — — — — — — — — — — — — — — — — — — — — —
-	Construtor:
-            (Connection cn, String nomeTabela)
-	— — — — — — — — — — — — — — — — — — — — —
-	Parâmetros:
-            Connection cn —> O objeto Connection contendo a conexão com um banco de dados. (Objeto não pode ser nulo e nem ter sido fechado)
-            String nomeTabela —> Uma String que contenha o nome da tabela que se deseja obter o metadata.
-	— — — — — — — — — — — — — — — — — — — — —
-	Atributos:
-            int numColunas —> Um número inteiro que representa o número de colunas que a tabela possui.
-            String[] nomeColunas —> Um Array de Strings que representa o nome das colunas que a tabela possui. (As suas posições seguem a mesma ordem de como estão dispostos na tabela)
-            String[] nomeTipoColunas —> Um Array de Strings que representa o nome do tipo das colunas que a tabela possui. (As suas posições seguem a mesma ordem de como estão dispostos na tabela)
-            int[] tipoColunas —> Um Array de Int que representa o tipo das colunas que a tabela possui, os valores correspondem ao java.sql.Types. (As suas posições seguem a mesma ordem de como estão dispostos na tabela)
-            Map<String, String> FKs —> Um Map que representa as tabelas e as colunas que são referenciadas pelas Foreign Keys da tabela passada como parâmetro.
-	— — — — — — — — — — — — — — — — — — — — —
-	Exceptions:
-            IllegalArgumentException:
-                Quando a conexão for nula ou estiver fechada;
-                Quando o nome da tabela não existir no banco de dados referenciado;
-	— — — — — — — — — — — — — — — — — — — — —
-	Obs: você pode obter esses valores de forma separada utilizando a classe estática metadata, passando como parâmetro a conexão e o nome da tabela ou passando um ResultSet.
+	Objeto TabelaMetaData:
+	     — — — — — — — — — — — — — — — — — — — — —
+		Construtor:
+	            (Connection cn, String nomeTabela)
+		— — — — — — — — — — — — — — — — — — — — —
+		Parâmetros:
+	            Connection cn —> O objeto Connection contendo a conexão com um banco de dados. (Objeto não pode ser nulo e nem ter sido fechado)
+	            String nomeTabela —> Uma String que contenha o nome da tabela que se deseja obter o metadata.
+		— — — — — — — — — — — — — — — — — — — — —
+		Atributos:
+	            int numColunas —> Um número inteiro que representa o número de colunas que a tabela possui.
+	            String[] nomeColunas —> Um Array de Strings que representa o nome das colunas que a tabela possui. (As suas posições seguem a mesma ordem de como estão dispostos na 					tabela)
+	            String[] nomeTipoColunas —> Um Array de Strings que representa o nome do tipo das colunas que a tabela possui. (As suas posições seguem a mesma ordem de como estão 					dispostos na tabela)
+	            int[] tipoColunas —> Um Array de Int que representa o tipo das colunas que a tabela possui, os valores correspondem ao java.sql.Types. (As suas posições seguem a mesma 				ordem de como estão dispostos na tabela)
+	            Map<String, String> FKs —> Um Map que representa as tabelas e as colunas que são referenciadas pelas Foreign Keys da tabela passada como parâmetro.
+		— — — — — — — — — — — — — — — — — — — — —
+		Exceptions:
+	            IllegalArgumentException:
+	                Quando a conexão for nula ou estiver fechada;
+	                Quando o nome da tabela não existir no banco de dados referenciado;
+		— — — — — — — — — — — — — — — — — — — — —
+		Obs: você pode obter esses valores de forma separada utilizando a classe estática metadata, passando como parâmetro a conexão e o nome da tabela ou passando um ResultSet.
