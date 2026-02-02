@@ -6,9 +6,9 @@ import java.util.Map.Entry;
 
 public class sql {
 
-    public static void teste(Connection cn) {
+    /*public static void teste(Connection cn) {
         System.out.println(validation.invalidConnection(cn));
-    }
+    }*/
 
     //--------------------------------------------------------------------------
     public static void insert(Connection cn, String nomeTabela, Object[] valores) {
