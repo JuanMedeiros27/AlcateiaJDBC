@@ -5,8 +5,32 @@ Esse é um Trabalho de Conclusão de Curso para o curso de Técnico de Informát
 
 Versão: 1.4
 
-Instalação: 
-    Será feita através do JitPack.
+	Instalação: 
+    	- Maven:
+			<repositories>
+				<repository>
+		    		<id>jitpack.io</id>
+		   			 <url>https://jitpack.io</url>
+					</repository>
+			</repositories>
+			<dependencies>
+		        <dependency>
+		            <groupId>com.github.JuanMedeiros27</groupId>
+		            <artifactId>AlcateiaJDBC</artifactId>
+		            <version>v1.4</version>
+		        </dependency>
+    		</dependencies>
+		- Gradle:
+			dependencyResolutionManagement {
+				repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+				repositories {
+					mavenCentral()
+					maven { url 'https://jitpack.io' }
+				}
+			}
+			dependencies {
+	        	implementation 'com.github.JuanMedeiros27:AlcateiaJDBC:v1.4'
+			}
 
 	Método connect:
 	    — — — — — — — — — — — — — — — — — — — — —
