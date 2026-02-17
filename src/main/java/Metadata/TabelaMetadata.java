@@ -2,21 +2,21 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package MetaData;
+package Metadata;
 import java.sql.*;
 import java.util.*;
 /**
  *
  * @author Juan
  */
-public class TabelaMetaData extends metadata{
+public class TabelaMetadata extends metadata{
     private int numColunas;
     private String[] nomeColunas;
     private String[] nomeTipoColunas;
     private int[] tipoColunas;
     private Map<String, String> FKs;
 
-    public TabelaMetaData(Connection cn, String nomeTabela) {
+    public TabelaMetadata(Connection cn, String nomeTabela) {
         this.numColunas = metadata.numeroColunas(cn, nomeTabela);
         this.nomeColunas = metadata.nomeColunas(cn, nomeTabela);
         this.nomeTipoColunas = metadata.nomeTipoColunas(cn, nomeTabela);

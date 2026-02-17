@@ -3,7 +3,7 @@ Uma biblioteca Java com métodos úteis para quem quer desenvolver com JDBC.
 
 Esse é um Trabalho de Conclusão de Curso para o curso de Técnico de Informática para Internet.
 
-Versão: 1.4
+Versão: 1.5
 
 	Instalação: 
     	- Maven:
@@ -17,7 +17,7 @@ Versão: 1.4
 		        <dependency>
 		            <groupId>com.github.JuanMedeiros27</groupId>
 		            <artifactId>AlcateiaJDBC</artifactId>
-		            <version>v1.4</version>
+		            <version>v1.5</version>
 		        </dependency>
     		</dependencies>
 		- Gradle:

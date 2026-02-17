@@ -29,20 +29,20 @@ public class cn {
     
     private static String formarURL(String provedor, String nomedb){
         switch(provedor){
-            case "postgres":
+            case "postgresql":
                 return "jdbc:%s://localhost:5432/%s".formatted(provedor,nomedb);
             case "mysql":
                 return "jdbc:%s://localhost:33060/%s".formatted(provedor,nomedb);
             default:
-                throw new IllegalArgumentException("Sistema nao suportado." + "\n\nSistemas que a biblioteca possui suporte: postgres, mysql.");
+                throw new IllegalArgumentException("Sistema nao suportado." + "\n\nSistemas que a biblioteca possui suporte:\n -postgresql\n -mysql");
         }
     }
     
     private static String formarURL(String provedor, String host, String nomedb){
-        if(provedor.equals("postgres") || provedor.equals("mysql")){
+        if(provedor.equals("postgresql") || provedor.equals("mysql")){
             return "jdbc:%s://%s/%s".formatted(provedor, host, nomedb);
         } else {
-            throw new IllegalArgumentException("Sistema nao suportado." + "\n\nSistemas que a biblioteca possui suporte: postgres, mysql.");
+            throw new IllegalArgumentException("Sistema nao suportado." + "\n\nSistemas que a biblioteca possui suporte:\n -postgresql\n -mysql");
         }
     }
     
