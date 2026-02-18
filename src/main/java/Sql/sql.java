@@ -328,7 +328,7 @@ public class sql {
         validation.invalidConnection(cn);
         validation.invalidTable(cn, nomeTabela);
         validation.invalidColumns(cn, nomeTabela, colunas);
-        validation.invalidValues(cn, nomeTabela, valores);
+        validation.invalidValues(colunas, valores);
         
         try (PreparedStatement stmt = cn.prepareStatement(generate.update(nomeTabela, colunas, valores, id))) {
             stmt.executeUpdate();
@@ -872,6 +872,21 @@ public class sql {
                             + "\n\nO Array passado como parametro tem mais (ou menos) valores do que o numero de colunas possiveis para se inserir.");
             }
             
+            return control;
+        }
+        
+        public static boolean invalidValues(String[] columns, Object[] values) {
+            boolean control = false;
+
+            if (values.length != columns.length) {
+                control = true;
+            }
+            
+            if (control) {
+                throw new IllegalArgumentException("Array menor ou maior que o numero de colunas."
+                        + "\n\nO Array passado como parametro tem mais (ou menos) valores do que o numero de colunas possiveis para se inserir.");
+            }
+
             return control;
         }
         
