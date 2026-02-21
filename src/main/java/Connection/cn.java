@@ -16,9 +16,9 @@ public class cn {
         return null;
     }
     
-    public static Connection connect(String sistema,String host, String nomedb, String user, String senha){
+    public static Connection connect(String sistema, String host, String nomedb, String user, String senha){
         try {
-            Connection connection = DriverManager.getConnection(formarURL(provedor, host, nomedb), user, senha);
+            Connection connection = DriverManager.getConnection(formarURL(sistema, host, nomedb), user, senha);
             connection.setAutoCommit(false);
             return connection;
         } catch (SQLException ex) {
@@ -27,8 +27,8 @@ public class cn {
         return null;
     }
     
-    private static String formarURL(String provedor, String nomedb){
-        switch(provedor){
+    private static String formarURL(String sistema, String nomedb){
+        switch(sistema){
             case "postgresql":
                 return "jdbc:%s://localhost:5432/%s".formatted(provedor,nomedb);
             case "mysql":
@@ -38,8 +38,8 @@ public class cn {
         }
     }
     
-    private static String formarURL(String provedor, String host, String nomedb){
-        if(provedor.equals("postgresql") || provedor.equals("mysql")){
+    private static String formarURL(String sistema, String host, String nomedb){
+        if(sistema.equals("postgresql") || sistema.equals("mysql")){
             return "jdbc:%s://%s/%s".formatted(provedor, host, nomedb);
         } else {
             throw new IllegalArgumentException("Sistema nao suportado." + "\n\nSistemas que a biblioteca possui suporte:\n -postgresql\n -mysql");
@@ -47,4 +47,5 @@ public class cn {
     }
     
 }
+
 
