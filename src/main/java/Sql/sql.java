@@ -6,8 +6,8 @@ import java.util.Map.Entry;
 
 public class sql {
 
-    /*public static void teste(Connection cn) {
-        System.out.println(validation.invalidConnection(cn));
+    /*public static void teste(String nomeTabela, String[] colunas) {
+        System.out.println(generate.update(nomeTabela, colunas));
     }*/
 
     //--------------------------------------------------------------------------
@@ -16,16 +16,21 @@ public class sql {
         validation.invalidTable(cn, nomeTabela);
         validation.invalidValues(cn, nomeTabela, valores);
         
-        try (PreparedStatement stmt = cn.prepareStatement(generate.insert(cn, nomeTabela, valores))) {
+        try (PreparedStatement stmt = cn.prepareStatement(generate.insert(cn, nomeTabela, valores.length));
+                ResultSet result = generate.resultSet(cn, generate.selectAll(nomeTabela))) {
+            int[] types = metadata.columnsType(result);
+            
+            for(int i = 0; i < valores.length; i++){
+                stmt.setObject(i + 1, valores[i], types[i + 1]);
+            }
+            
             stmt.executeUpdate();
             System.out.println("Insert realizado com sucesso!\n O sql gerado foi: "
-                    + generate.insert(cn, nomeTabela, valores));
+                    + generate.insert(cn, nomeTabela, valores.length));
 
             cn.commit();
         } catch (SQLException ex) {
             System.getLogger(sql.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
-            /*System.out.println("Falha ao realizar o insert! \n O sql gerado foi: "
-                    + generate.insert(cn, nomeTabela, valores));*/
             try {
                 cn.rollback();
             } catch (SQLException ex1) {
@@ -299,16 +304,23 @@ public class sql {
         validation.invalidTable(cn, nomeTabela);
         validation.invalidValues(cn, nomeTabela, valores);
         
-        try (PreparedStatement stmt = cn.prepareStatement(generate.update(cn, nomeTabela, valores, id))) {
+        try (PreparedStatement stmt = cn.prepareStatement(generate.update(cn, nomeTabela));
+                ResultSet result = generate.resultSet(cn, generate.selectAll(nomeTabela))) {
+            int[] types = metadata.columnsType(result);
+            
+            for(int i = 0; i < valores.length; i++){
+                stmt.setObject(i + 1, valores[i], types[i + 1]);
+            }
+            
+            stmt.setObject(types.length, id, Types.INTEGER);
+            
             stmt.executeUpdate();
             System.out.println("Update feito com sucesso!\n O sql gerado foi: "
-                    + generate.update(cn, nomeTabela, valores, id));
+                    + generate.update(cn, nomeTabela));
 
             cn.commit();
         } catch (SQLException ex) {
             System.getLogger(sql.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
-            System.out.println("Falha ao realizar o update!\n O sql gerado foi: "
-                    + generate.update(cn, nomeTabela, valores, id));
             try {
                 cn.rollback();
             } catch (SQLException ex1) {
@@ -328,18 +340,22 @@ public class sql {
         validation.invalidConnection(cn);
         validation.invalidTable(cn, nomeTabela);
         validation.invalidColumns(cn, nomeTabela, colunas);
-        validation.invalidValues(cn, nomeTabela, valores);
+        validation.invalidValues(colunas, valores);
         
-        try (PreparedStatement stmt = cn.prepareStatement(generate.update(nomeTabela, colunas, valores, id))) {
+        try (PreparedStatement stmt = cn.prepareStatement(generate.update(nomeTabela, colunas))) {
+            for(int i = 0; i < colunas.length; i++){
+                stmt.setObject(i + 1, valores[i]);
+            }
+            
+            stmt.setObject(colunas.length + 1, id);
+            
             stmt.executeUpdate();
             System.out.println("Update feito com sucesso!\n O sql gerado foi: "
-                    + generate.update(nomeTabela, colunas, valores, id));
+                    + generate.update(nomeTabela, colunas));
 
             cn.commit();
         } catch (SQLException ex) {
             System.getLogger(sql.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
-            System.out.println("Falha ao realizar o update!\n O sql gerado foi: "
-                    + generate.update(nomeTabela, colunas, valores, id));
             try {
                 cn.rollback();
             } catch (SQLException ex1) {
@@ -494,7 +510,7 @@ public class sql {
             String values = "";
 
             if (valores != null) {
-                //para values de insert
+                //para values de insert (NÃO É MAIS UTILIZADO)
                 for (int i = 0; i < valores.length; i++) {
                     if (valores[i] instanceof String) {
                         valores[i] = "'" + valores[i] + "'";
@@ -524,77 +540,100 @@ public class sql {
         public static String select(String nomeTabela, String colunas) {
             return "SELECT %s FROM %s".formatted(colunas, nomeTabela.trim());
         }
-
-        /*public static String selectColumns(String[] colunas) {
-            String selectColumns = "";
-
-            for (int i = 0; i < colunas.length; i++) {
-                if (i == colunas.length - 1) {
-                    selectColumns += colunas[i];
-                } else {
-                    selectColumns += colunas[i] + ",";
-                }
-            }
-            
-            return selectColumns;
-        }*/
-                
+               
         public static String selectWhere(String nomeTabela, String colunas, String where) {
             return "SELECT %s FROM %s WHERE %s".formatted(colunas, nomeTabela, where);
         }
 
-        public static String insert(Connection cn, String nomeTabela, Object[] valores) {
+        public static String insert(Connection cn, String nomeTabela, int numParameter) {
             try (PreparedStatement stmt = cn.prepareStatement(selectAll(nomeTabela)); ResultSet result = stmt.executeQuery()) {
                 return "INSERT INTO %s %s VALUES %s;".formatted(nomeTabela.trim(),
                         values(null, result),
-                        values(valores, null));
+                        parameterInsert(numParameter));
             } catch (SQLException ex) {
                 System.getLogger(sql.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
                 return "";
             }
+        }
+        
+        public static String parameterInsert(int numParameter){
+            String parameter = "";
+       
+            if (numParameter > 1) {
+                for (int i = 0; i < numParameter; i++) {
+                    if (i == 0) {
+                        parameter += "(?,";
+                    } else if (i == numParameter - 1) {
+                        parameter += "?)";
+                    } else {
+                        parameter += "?,";
+                    }
+                }
+            } else {
+                parameter = "(?)";
+            }
+            return parameter;
         }
 
         public static String delete(String nomeTabela, int id) {
             return "DELETE FROM %s WHERE ID = %d".formatted(nomeTabela.trim(), id);
         }
 
-        public static String update(Connection cn, String nomeTabela, Object[] valores, int id) {
+        public static String update(Connection cn, String nomeTabela) {
             String sql = "UPDATE %s SET ".formatted(nomeTabela.trim());
 
             try (ResultSet result = resultSet(cn, selectAll(nomeTabela.trim()))) {
                 List<String> columns = new ArrayList(Arrays.asList(metadata.columnsName(result)));
                 columns.removeFirst();
+                
+                if(columns.size() == 1){
+                    return "UPDATE %s SET %s = ? WHERE id = ?;".formatted(nomeTabela, columns.get(0));
+                }
 
                 for (int i = 0; i < columns.size(); i++) {
-                    if (i == columns.size() - 1) {
-                        sql += translate.javaToUpdate(columns.get(i), valores[i], true);
-                    } else {
-                        sql += translate.javaToUpdate(columns.get(i), valores[i], false);
+                    if(i == columns.size() - 1){
+                        sql += parameterUpdate(columns.get(i), true);
+                    } else{
+                        sql += parameterUpdate(columns.get(i), false);
                     }
                 }
 
-                sql += "WHERE id = %d".formatted(id);
+                sql += "WHERE id = ?;";
 
                 return sql;
             } catch (SQLException ex) {
                 System.getLogger(sql.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
-                return "";
             }
-
+            
+            return "";
         }
 
-        public static String update(String nomeTabela, String[] colunas, Object[] valores, int id) {
-            String columns = "";
-
+        public static String update(String nomeTabela, String[] colunas) {
+            String sql = "UPDATE %s SET ".formatted(nomeTabela.trim());
+            
+            if(colunas.length == 1){
+                    return "UPDATE %s SET %s = ? WHERE id = ?;".formatted(nomeTabela, colunas[0]);
+                }
+            
             for (int i = 0; i < colunas.length; i++) {
                 if (i == colunas.length - 1) {
-                    columns += translate.javaToUpdate(colunas[i], valores[i], true);
+                    sql += parameterUpdate(colunas[i], true);
                 } else {
-                    columns += translate.javaToUpdate(colunas[i], valores[i], false);
+                    sql += parameterUpdate(colunas[i], false);
                 }
             }
+            
+            sql += "WHERE id = ?;";
 
-            return "UPDATE %s SET %s WHERE id = %d".formatted(nomeTabela.trim(), columns, id);
+            return sql;
+        }
+        
+        public static String parameterUpdate(String column, boolean isLast){
+            if(!isLast){
+                return column + " = ?, ";
+            } else{
+                return column + " = ? ";
+            }
         }
 
         //até que serve pra algo, mas precisa ter cuidado pra fechar esse resultset em algum momento
@@ -759,7 +798,7 @@ public class sql {
             if (columnName.equals("id")) {
                 try {
                     valueT = result.getLong(columnName);
-                    System.out.println("Valor retornado: " + valueT);
+                    return valueT;
                 } catch (SQLException ex) {
                     System.getLogger(sql.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
                 }
@@ -771,7 +810,6 @@ public class sql {
                 case Types.TINYINT:
                     try {
                         valueT = result.getInt(columnName);
-                        System.out.println("Valor retornado: " + valueT);
                     } catch (SQLException ex) {
                         System.getLogger(sql.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
                     }
@@ -781,7 +819,6 @@ public class sql {
                 case Types.LONGVARCHAR:
                     try {
                         valueT = result.getString(columnName);
-                        System.out.println("Valor retornado: " + valueT);
                     } catch (SQLException ex) {
                         System.getLogger(sql.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
                     }
@@ -792,57 +829,19 @@ public class sql {
                 case Types.REAL:
                     try {
                         valueT = result.getDouble(columnName);
-                        System.out.println("Valor retornado: " + valueT);
                     } catch (SQLException ex) {
                         System.getLogger(sql.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
                     }
                     break;
                 default:
-                    System.out.println("Tipo não encontrado!");
                     try {
                         valueT = result.getObject(columnName);
-                        System.out.println("Valor retornado: " + valueT);
                     } catch (SQLException ex) {
                         System.getLogger(sql.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
                     }
             }
 
             return valueT;
-        }
-
-        public static <T> String javaToUpdate(String column, T t, boolean last) {
-            String type = t.getClass().getSimpleName();
-
-            if (!last) {
-                switch (type) {
-                    case "Integer":
-                        return "%s = %d, ".formatted(column, t);
-                    case "Double":
-                    case "Float":
-                        return "%s = %f, ".formatted(column, t);
-                    case "String":
-                        return "%s = '%s', ".formatted(column, t);
-                    case "Boolean":
-                        return "%s = '%b', ".formatted(column, t);
-                    default:
-                        return "%s = '%s', ".formatted(column, t.toString());
-                }
-            } else {
-                switch (type) {
-                    case "Integer":
-                        return "%s = %d ".formatted(column, t);
-                    case "Double":
-                    case "Float":
-                        return "%s = %f ".formatted(column, t);
-                    case "String":
-                        return "%s = '%s' ".formatted(column, t);
-                    case "Boolean":
-                        return "%s = %b ".formatted(column, t);
-                    default:
-                        return "%s = '%s' ".formatted(column, t.toString());
-                }
-            }
-
         }
 
     }
@@ -872,6 +871,21 @@ public class sql {
                             + "\n\nO Array passado como parametro tem mais (ou menos) valores do que o numero de colunas possiveis para se inserir.");
             }
             
+            return control;
+        }
+        
+        public static boolean invalidValues(String[] columns, Object[] values) {
+            boolean control = false;
+
+            if (values.length != columns.length) {
+                control = true;
+            }
+            
+            if (control) {
+                throw new IllegalArgumentException("Array menor ou maior que o numero de colunas."
+                        + "\n\nO Array passado como parametro tem mais (ou menos) valores do que o numero de colunas possiveis para se inserir.");
+            }
+
             return control;
         }
         
