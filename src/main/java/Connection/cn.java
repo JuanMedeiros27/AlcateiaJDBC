@@ -16,7 +16,7 @@ public class cn {
         return null;
     }
     
-    public static Connection connect(String provedor,String host, String nomedb, String user, String senha){
+    public static Connection connect(String sistema,String host, String nomedb, String user, String senha){
         try {
             Connection connection = DriverManager.getConnection(formarURL(provedor, host, nomedb), user, senha);
             connection.setAutoCommit(false);
@@ -47,3 +47,4 @@ public class cn {
     }
     
 }
+
