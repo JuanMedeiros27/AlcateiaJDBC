@@ -3,7 +3,9 @@ Uma biblioteca Java com métodos úteis para quem quer desenvolver com JDBC.
 
 Esse é um Trabalho de Conclusão de Curso para o curso de Técnico de Informática para Internet.
 
-Versão: 1.6
+Versão: 1.7
+
+Videoaulas: https://www.youtube.com/watch?v=K1GV8sirhZ4&list=PL9dLhM7PLmAFnRZhx9693aHodlcTNpZxP
 
 Versão do JDK: 21
 
@@ -19,7 +21,7 @@ Versão do JDK: 21
 		        <dependency>
 		            <groupId>com.github.JuanMedeiros27</groupId>
 		            <artifactId>AlcateiaJDBC</artifactId>
-		            <version>v1.6</version>
+		            <version>v1.7</version>
 		        </dependency>
     		</dependencies>
 		- Gradle:
@@ -31,7 +33,7 @@ Versão do JDK: 21
 				}
 			}
 			dependencies {
-	        	implementation 'com.github.JuanMedeiros27:AlcateiaJDBC:v1.6'
+	        	implementation 'com.github.JuanMedeiros27:AlcateiaJDBC:v1.7'
 			}
 
 	Método connect:
